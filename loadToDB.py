@@ -24,9 +24,11 @@ def get_rev(node_name='null',hostname='none'):
     return json_obj['_rev']
 
 def rewrite_id_rev(hostname='null',rev='null',file_name='null'):
-    f=open(file_name,'r')
+    file_name_in_file = 'CouchDB_json/'+file_name
+    f=open(file_name_in_file,'r')
     new = 'new'+file_name
-    fout=open(new,'w')
+    new_file_name_in_file = 'CouchDB_json/'+new
+    fout=open(new_file_name_in_file,'w')
     r=f.read()
     f.close()
     json_obj = json.loads(r)
@@ -38,8 +40,8 @@ def rewrite_id_rev(hostname='null',rev='null',file_name='null'):
 
 def upload_to_couchDB(node_name='null',hostname='null',file_name='null'):
     url = "http://127.0.0.1:5984/nodered/"+hostname+"%2F"+node_name
-    new = 'new'+file_name
-    file =open(new,'r')
+    file_name_in_file = 'CouchDB_json/new'+file_name
+    file=open(file_name_in_file,'r')
     x=file.read()
     p=requests.put(url,x)
     print p.text
@@ -71,8 +73,8 @@ url = "http://127.0.0.1:5984/nodered/_design/library"
 rev = requests.get(url)
 json_obj = json.loads(rev.text)
 dl_rev = json_obj['_rev']
-f=open(file_dl,'r')
-new = 'new'+file_dl
+f=open('CouchDB_json/'+file_dl,'r')
+new = 'CouchDB_json/new'+file_dl
 fout=open(new,'w')
 r=f.read()
 f.close()
