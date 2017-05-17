@@ -14,7 +14,8 @@ import os
 file_flow = 'flow.json'
 file_settings = 'settings.json'
 file_credential = 'credential.json'
-file_dl = 'design_library.json'
+file_dl_humix = 'humixdesignModule.json'
+file_dl_nodered = 'nodereddesignLibrary.json'
 ##veriable value##
 
 def get_rev(node_name='null',hostname='none'):
@@ -69,30 +70,30 @@ rewrite_id_rev(hostName,credential_rev,file_credential)
 
 
 ##design library##
-url = "http://127.0.0.1:5984/nodered/_design/library"
-rev = requests.get(url)
-json_obj = json.loads(rev.text)
-dl_rev = json_obj['_rev']
-f=open('CouchDB_json/'+file_dl,'r')
-new = 'CouchDB_json/new'+file_dl
-fout=open(new,'w')
-r=f.read()
-f.close()
-json_obj = json.loads(r)
-json_obj['_rev']=dl_rev
-outStr = json.dumps(json_obj, ensure_ascii = False) 
-fout.write(outStr.strip().encode('utf-8'))
-fout.close()
-
-file =open(new,'r')
-x=file.read()
-p=requests.put(url,x)
-print p.text
-file.close()
-
+def design_library_flow(dbname='null',file_dl='null',modulename='null'):
+    url = "http://127.0.0.1:5984/"+dbname+'/'+modulename
+    rev = requests.get(url)
+    json_obj = json.loads(rev.text)
+    dl_rev = json_obj['_rev']
+    f=open('CouchDB_json/'+file_dl,'r')
+    new = 'CouchDB_json/new'+file_dl
+    fout=open(new,'w')
+    r=f.read()
+    f.close()
+    json_obj = json.loads(r)
+    json_obj['_rev']=dl_rev
+    outStr = json.dumps(json_obj, ensure_ascii = False) 
+    fout.write(outStr.strip().encode('utf-8'))
+    fout.close()
+    file =open(new,'r')
+    x=file.read()
+    p=requests.put(url,x)
+    print p.text
+    file.close()
 ##design library##
 
-
+design_library_flow(dbname='humix',file_dl=file_dl_humix,modulename='_design/module')
+design_library_flow(dbname='nodered',file_dl=file_dl_nodered,modulename='/_design/library')
 
 ##3. upload to couchDB##
 upload_to_couchDB('flow',hostName,file_flow)

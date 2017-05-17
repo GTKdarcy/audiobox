@@ -9,20 +9,26 @@ def newOpen(filename='null'):
     url = "http://127.0.0.1:5984/nodered/"+hostName+"%2F"+filename
     r=requests.get(url)        
     output=r.text
-    F2 = filename+'.json'
+    F2 = 'CouchDB_json/'+filename+'.json'
     file=open(F2,'w')
     file.write(output.strip().encode('utf-8'))
     file.close()
 
-newOpen('CouchDB_json/flow')
-newOpen('CouchDB_json/settings')
-newOpen('CouchDB_json/credential')
+def newOpen_designLibrary(dbname='null',modulename='null',filename='null'):
+    url = "http://127.0.0.1:5984/"+dbname+'/'+modulename
+    r=requests.get(url)        
+    output=r.text
+    F2 = 'CouchDB_json/'+dbname+filename+'.json'
+    file=open(F2,'w')
+    file.write(output.strip().encode('utf-8'))
+    file.close()
 
 
-url = "http://127.0.0.1:5984/nodered/_design/library"
-r=requests.get(url)        
-output=r.text
-F2 = 'CouchDB_json/design_library.json'
-file=open(F2,'w')
-file.write(output.strip().encode('utf-8'))
-file.close()
+newOpen('flow')
+newOpen('settings')
+newOpen('credential')
+newOpen_designLibrary('humix','_design/module','designModule')
+newOpen_designLibrary('nodered','/_design/library','designLibrary')
+
+
+
